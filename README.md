@@ -12,21 +12,19 @@ Os links levam um código aleatório e as páginas não aparecem no Google.
 | Pasta | O que é | Vai para o GitHub? |
 |---|---|---|
 | `admin/`, `assets/`, `lib/`, `*.php` | Código | Sim |
-| `dados/` | Senha (criptografada), sessões e dados das galerias | **Não**, criada no servidor |
-| `galerias/` | Fotos das clientes | **Não**, criada no servidor |
+| `../galeria-dados/` | Senha (criptografada), sessões, dados das galerias e fotos das clientes | **Não**, criada no servidor |
 
-As fotos só existem no servidor. Para backup, baixe as pastas `dados/` e `galerias/` pelo Gerenciador de Arquivos da Hostinger.
+A pasta `galeria-dados` fica **ao lado** do `public_html`, não dentro dele. Assim uma nova implantação do GitHub nunca apaga as fotos, e nenhuma foto é servida direto: tudo passa pelo `foto.php` e pelo `baixar.php`. Se o servidor não deixar criar essa pasta, o sistema usa `dados/` dentro do site.
+
+Para backup, baixe a pasta `galeria-dados` pelo Gerenciador de Arquivos da Hostinger.
 
 ## Publicar na Hostinger
 
-1. **Subdomínio**: hPanel → Domínios → Subdomínios → criar `galeria.gddigital.com.br`. Anote a pasta que a Hostinger cria para ele.
-2. **Git**: hPanel → Avançado → GIT → Criar novo repositório
-   - Repositório: `https://github.com/brunadumer/galeria-ensaios.git`
-   - Branch: `main`
-   - Diretório: a pasta do subdomínio (precisa estar vazia; apague o `default.php` se houver).
-   - Depois de criar, clique em **Implantar**. Para atualizar no futuro, clique em Implantar de novo (ou ative a implantação automática).
-3. **SSL**: hPanel → Segurança → SSL → instalar para o subdomínio.
-4. **Primeiro acesso**: abra `https://SEU-SUBDOMINIO/admin/` e crie o nome do estúdio e a senha. Faça isso logo após publicar: o primeiro acesso é quem define a senha.
+1. **Site**: hPanel → Sites → Criar site → Site PHP/HTML → `galeria.gddigital.com.br`. Ele é um site separado (e não um subdomínio dentro do `public_html` da GD Digital), para que os deploys de um não mexam no outro.
+2. **Git**: no painel do site → Avançado → GIT → Continuar com GitHub → repositório `brunadumer/galeria-ensaios`, branch `main`, implantação automática.
+3. **DNS**: o domínio gddigital.com.br não usa os nameservers da Hostinger. No provedor de DNS, crie um registro `A` para `galeria` apontando para o IP do site (hPanel → painel do site → Plano de hospedagem / Detalhes).
+4. **SSL**: hPanel → Segurança → SSL → instalar para `galeria.gddigital.com.br` (depois que o DNS propagar).
+5. **Primeiro acesso**: abra `https://SEU-SUBDOMINIO/admin/` e crie o nome do estúdio e a senha. Faça isso logo após publicar: o primeiro acesso é quem define a senha.
 
 Requisitos: PHP 8.1 ou mais novo, com `mbstring` e `zip` (padrão na Hostinger). O `.user.ini` aumenta o limite de envio para 64 MB por foto.
 

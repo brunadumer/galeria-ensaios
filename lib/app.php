@@ -2,9 +2,20 @@
 declare(strict_types=1);
 
 define('RAIZ', dirname(__DIR__));
-define('DADOS', RAIZ . '/dados');            // config, sessões e dados das galerias (nunca público)
+define('DADOS', armazem());                  // config, sessões, galerias e fotos (nunca servido direto)
 define('META', DADOS . '/galerias');
-define('GALERIAS', RAIZ . '/galerias');      // arquivos das fotos (público, com nomes aleatórios)
+define('GALERIAS', DADOS . '/fotos');        // fotos saem pelo foto.php e pelo baixar.php
+
+/**
+ * Pasta dos dados. Fica ao lado da pasta do site (fora do public_html), para que
+ * uma nova implantação do GitHub nunca apague as fotos das clientes.
+ */
+function armazem(): string
+{
+    $fora = dirname(RAIZ) . '/galeria-dados';
+    if ((is_dir($fora) || @mkdir($fora, 0755, true)) && is_writable($fora)) return $fora;
+    return RAIZ . '/dados';
+}
 
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 const EXTENSOES = ['jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
@@ -14,12 +25,10 @@ function prepararPastas(): bool
     foreach ([DADOS, META, DADOS . '/sessoes', GALERIAS] as $p) {
         if (!is_dir($p)) @mkdir($p, 0755, true);
     }
-    // Proteções para o caso de o .htaccess da raiz não valer.
+    // Proteção para quando a pasta de dados acaba dentro do site.
     $protecoes = [
         DADOS . '/.htaccess' => "Require all denied\n",
         DADOS . '/index.html' => '',
-        GALERIAS . '/.htaccess' => "Options -Indexes\n",
-        GALERIAS . '/index.html' => '',
     ];
     foreach ($protecoes as $arq => $conteudo) {
         if (!is_file($arq)) @file_put_contents($arq, $conteudo);
@@ -134,7 +143,7 @@ function listarGalerias(): array
 
 function urlFoto(array $g, array $f, bool $mini = false): string
 {
-    return baseUrl() . '/galerias/' . $g['id'] . '/' . $f['id'] . ($mini ? '-mini.jpg' : '.' . $f['ext']);
+    return baseUrl() . '/foto.php?g=' . $g['id'] . '&f=' . $f['id'] . ($mini ? '&mini=1' : '');
 }
 
 function nomeDownload(array $f, int $i): string

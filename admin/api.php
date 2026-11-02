@@ -86,6 +86,7 @@ if ($acao === 'estado') {
         'estudio' => $cfg['estudio'] ?? '',
         'limite' => limiteEnvio(),
         'gravavel' => $pastasOk,
+        'dadosForaDoSite' => strpos(DADOS, RAIZ) !== 0,
     ]);
 }
 
