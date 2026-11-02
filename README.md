@@ -19,7 +19,7 @@ As fotos só existem no servidor. Para backup, baixe as pastas `dados/` e `galer
 
 ## Publicar na Hostinger
 
-1. **Subdomínio**: hPanel → Domínios → Subdomínios → criar (ex.: `fotos.gddigital.com.br`). Anote a pasta que a Hostinger cria para ele.
+1. **Subdomínio**: hPanel → Domínios → Subdomínios → criar `galeria.gddigital.com.br`. Anote a pasta que a Hostinger cria para ele.
 2. **Git**: hPanel → Avançado → GIT → Criar novo repositório
    - Repositório: `https://github.com/brunadumer/galeria-ensaios.git`
    - Branch: `main`
