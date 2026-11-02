@@ -269,7 +269,7 @@ root.addEventListener('click', async function(e){
 
 function mensagem(){
   var nome = (atual.cliente || '').trim().split(/\s+/)[0];
-  return 'Oi' + (nome ? ', ' + nome : '') + '! Suas fotos estão prontas ✨' + (atual.titulo ? '\n' + atual.titulo : '') +
+  return 'Oi' + (nome ? ', ' + nome : '') + '! Suas fotos estão prontas.' + (atual.titulo ? '\n' + atual.titulo : '') +
     '\n\nVeja e baixe por aqui:\n' + linkGaleria(atual);
 }
 function whatsapp(){
